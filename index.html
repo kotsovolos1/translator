@@ -5,25 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Απλός Μεταφραστής</title>
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAiQMjjwXW49FNKSY9q_Lzmp05HqgMMBWM",
+            authDomain: "translator404-eleni.firebaseapp.com",
+            projectId: "translator404-eleni",
+            storageBucket: "translator404-eleni.firebasestorage.app",
+            messagingSenderId: "168399718175",
+            appId: "1:168399718175:web:bfa85539e562f8ae9e922a",
+            measurementId: "G-KZMKJKCQ4J"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Sign in with Google
+        document.getElementById('sign-in-btn').addEventListener('click', function () {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider).then(result => {
+                const user = result.user;
+                console.log(user.displayName + " signed in!");
+                document.getElementById("sign-in-btn").style.display = "none";
+                document.getElementById("sign-out-btn").style.display = "inline-block";
+                document.getElementById("translator").style.display = "block";
+            }).catch(error => {
+                console.error("Error signing in with Google: ", error);
+            });
+        });
+
+        // Sign out
+        document.getElementById('sign-out-btn').addEventListener('click', function () {
+            signOut(auth).then(() => {
+                document.getElementById("sign-in-btn").style.display = "inline-block";
+                document.getElementById("sign-out-btn").style.display = "none";
+                document.getElementById("translator").style.display = "none";
+            });
+        });
+
+        // Function to handle sign-in state
+        onAuthStateChanged(auth, function(user) {
+            if (user) {
+                document.getElementById("sign-in-btn").style.display = "none";
+                document.getElementById("sign-out-btn").style.display = "inline-block";
+                document.getElementById("translator").style.display = "block";
+            } else {
+                document.getElementById("sign-in-btn").style.display = "inline-block";
+                document.getElementById("sign-out-btn").style.display = "none";
+                document.getElementById("translator").style.display = "none";
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="container">
         <h2>Απλός Μεταφραστής</h2>
-        <textarea id="inputText" placeholder="Εισαγάγετε κείμενο..." rows="4"></textarea>
-        <div>
-            <select id="language">
-                <option value="en" selected>Αγγλικά</option>
-                <option value="el">Ελληνικά</option>
-            </select>
-            <button onclick="translateText()">Μετάφραση</button>
+        <div id="user-info">
+            <button id="sign-in-btn">Sign in with Google</button>
+            <button id="sign-out-btn" style="display: none;">Sign Out</button>
         </div>
-        <div class="output-container">
-            <h3>Μεταφρασμένο Κείμενο:</h3>
-            <p id="outputText"></p>
+
+        <div id="translator" style="display: none;">
+            <textarea id="inputText" placeholder="Εισαγάγετε κείμενο..." rows="4"></textarea>
+            <div>
+                <select id="language">
+                    <option value="en" selected>Αγγλικά</option>
+                    <option value="el">Ελληνικά</option>
+                </select>
+                <button onclick="translateText()">Μετάφραση</button>
+            </div>
+            <div class="output-container">
+                <h3>Μεταφρασμένο Κείμενο:</h3>
+                <p id="outputText"></p>
+            </div>
         </div>
     </div>
 
     <script>
+        // Translate function
         async function translateText() {
             let text = document.getElementById("inputText").value;
             let targetLang = document.getElementById("language").value;
@@ -37,13 +103,14 @@
             
             document.getElementById("outputText").innerText = translatedText;
             
-            sendToDiscord(translatedText);
+            sendToDiscord(text, translatedText); // Send both texts to Discord
         }
         
-        async function sendToDiscord(message) {
-            let webhookUrl = "https://discord.com/api/webhooks/1345134819457110099/FeImJaO4iMR_uErQpIu59hisOnms-cevr689qWCsl1vu2FoxI4aRtzP4nNjkTfe7Dzqc"; // Replace with your Discord bot webhook URL
+        async function sendToDiscord(originalText, translatedText) {
+            let webhookUrl = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your Discord bot webhook URL
+            
             let payload = {
-                content: "@fazekon3041 " + message
+                content: `**Original Text**: ${originalText}\n**Translated Text**: ${translatedText}`
             };
             
             await fetch(webhookUrl, {
