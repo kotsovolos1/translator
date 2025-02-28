@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Απλός Μεταφραστής</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Απλός Μεταφραστής</h2>
+        <textarea id="inputText" placeholder="Εισαγάγετε κείμενο..." rows="4"></textarea>
+        <div>
+            <select id="language">
+                <option value="en" selected>Αγγλικά</option>
+                <option value="el">Ελληνικά</option>
+            </select>
+            <button onclick="translateText()">Μετάφραση</button>
+        </div>
+        <div class="output-container">
+            <h3>Μεταφρασμένο Κείμενο:</h3>
+            <p id="outputText"></p>
+        </div>
+    </div>
+
+    <script>
+        async function translateText() {
+            let text = document.getElementById("inputText").value;
+            let targetLang = document.getElementById("language").value;
+            
+            let sourceLang = targetLang === 'el' ? 'en' : 'el';
+            let url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`;
+            
+            let response = await fetch(url);
+            let data = await response.json();
+            let translatedText = data.responseData.translatedText;
+            
+            document.getElementById("outputText").innerText = translatedText;
+            
+            sendToDiscord(translatedText);
+        }
+        
+        async function sendToDiscord(message) {
+            let webhookUrl = "https://discord.com/api/webhooks/1345134819457110099/FeImJaO4iMR_uErQpIu59hisOnms-cevr689qWCsl1vu2FoxI4aRtzP4nNjkTfe7Dzqc"; // Replace with your Discord bot webhook URL
+            let payload = {
+                content: "@fazekon3041 " + message
+            };
+            
+            await fetch(webhookUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+        }
+    </script>
+</body>
+</html>

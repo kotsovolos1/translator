@@ -1,0 +1,122 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #e8f0f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+    padding: 20px;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+h2 {
+    color: #0066cc;
+    margin-bottom: 30px;
+    font-weight: 600;
+    font-size: 30px;
+}
+
+textarea {
+    width: 100%;
+    height: 180px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    font-size: 20px;
+    resize: none;
+    margin-bottom: 30px;
+    transition: border-color 0.3s;
+    background-color: #f4f7fb;
+    color: #333;
+}
+
+textarea:focus {
+    border-color: #0066cc;
+    outline: none;
+}
+
+select, button {
+    width: 100%;
+    padding: 18px 24px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    font-size: 20px;
+    background-color: #f4f7fb;
+    margin: 12px 0;
+    transition: all 0.3s ease;
+}
+
+select:focus, button:focus {
+    outline: none;
+    border-color: #0066cc;
+}
+
+button {
+    background-color: #0066cc;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+button:hover {
+    background-color: #005bb5;
+}
+
+.output-container {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f4f7fb;
+    border-radius: 12px;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.output-container h3 {
+    font-size: 24px;
+    color: #555;
+}
+
+.output-container p {
+    font-size: 22px;
+    color: #333;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 30px;
+    }
+
+    h2 {
+        font-size: 26px;
+        margin-bottom: 25px;
+    }
+
+    textarea {
+        height: 160px;
+    }
+
+    select, button {
+        font-size: 18px;
+    }
+
+    .output-container {
+        margin-top: 25px;
+        padding: 15px;
+    }
+}
